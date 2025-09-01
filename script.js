@@ -8,7 +8,7 @@ document.getElementById('queryBtn').addEventListener('click', async () => {
     }
 
     // 替換成您發布的 Google Apps Script 或 CSV URL
-    const API_URL = '您的 Google Apps Script URL 或 CSV URL';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbyerhlNCHLwMRXfh3go5r663pDGUSwruzOF4FsZ0kDhDlLL-7aht3CUIQcwIPShOuRX4A/exec';
 
     resultSection.innerHTML = '<p>正在查詢中，請稍候...</p>';
 
