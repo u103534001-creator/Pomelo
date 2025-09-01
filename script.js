@@ -1,3 +1,5 @@
+// script.js (新增總金額計算)
+
 document.getElementById('queryBtn').addEventListener('click', async () => {
     const name = document.getElementById('nameInput').value.trim();
     const resultSection = document.getElementById('resultSection');
@@ -17,8 +19,20 @@ document.getElementById('queryBtn').addEventListener('click', async () => {
 
         if (orders && orders.length > 0) {
             let html = `<h2>${name} 的訂單資訊</h2>`;
+
+            // 每個商品的單價
+            const prices = {
+                '特選柚 10斤裝': 800,
+                '特選柚 5斤裝': 400,
+                '大器柚 10斤裝': 500,
+                '雞蛋柚 10斤裝': 700,
+                '雞蛋柚 5斤裝': 350,
+                '紅文旦 10斤裝': 650
+            };
             
             orders.forEach((order, index) => {
+                let totalAmount = 0; // 初始化總金額
+                
                 // 開始一個新的卡片
                 html += `<div class="order-card">`;
                 html += `<h3>訂單 #${index + 1}</h3>`;
@@ -29,23 +43,30 @@ document.getElementById('queryBtn').addEventListener('click', async () => {
                 html += `<p><strong>收件人姓名：</strong> ${order['收件人姓名']}</p>`;
                 html += `<p><strong>收件人地址：</strong> ${order['收件人地址']}</p>`;
                 
-                // 處理商品訂購數量，只顯示有訂購的商品
+                // 處理商品訂購數量，並計算總金額
                 html += `<h4>訂購明細：</h4><ul>`;
                 
-                // 檢查訂單物件的所有鍵，找到商品欄位
                 for (const key in order) {
-                    // 根據 Google Sheet 欄位名稱來判斷是否為商品
                     if (key.includes('斤裝')) {
-                        const quantity = order[key] || 0;
+                        const quantity = parseInt(order[key], 10) || 0;
                         if (quantity > 0) {
-                            // 將完整的商品名稱截短，讓顯示更美觀
                             const shortName = key.split('（')[0].trim();
                             html += `<li>${shortName}：<strong>${quantity}</strong> 箱</li>`;
+                            
+                            // 根據商品名稱尋找對應的價格並加總
+                            if (prices[shortName]) {
+                                totalAmount += prices[shortName] * quantity;
+                            }
                         }
                     }
                 }
                 
-                html += `</ul></div>`;
+                html += `</ul>`;
+                
+                // 顯示總金額
+                html += `<h4>總金額：</h4><p><strong>新台幣 ${totalAmount} 元</strong></p>`;
+                
+                html += `</div>`;
             });
             
             resultSection.innerHTML = html;
