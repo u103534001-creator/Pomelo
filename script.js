@@ -1,5 +1,3 @@
-// script.js (優化後)
-
 document.getElementById('queryBtn').addEventListener('click', async () => {
     const name = document.getElementById('nameInput').value.trim();
     const resultSection = document.getElementById('resultSection');
@@ -24,6 +22,8 @@ document.getElementById('queryBtn').addEventListener('click', async () => {
                 // 開始一個新的卡片
                 html += `<div class="order-card">`;
                 html += `<h3>訂單 #${index + 1}</h3>`;
+                
+                // 顯示基本訂購資訊
                 html += `<p><strong>訂購人：</strong> ${order['訂購人姓名']}</p>`;
                 html += `<p><strong>取貨方式：</strong> ${order['取貨方式']}</p>`;
                 html += `<p><strong>收件人姓名：</strong> ${order['收件人姓名']}</p>`;
@@ -32,19 +32,19 @@ document.getElementById('queryBtn').addEventListener('click', async () => {
                 // 處理商品訂購數量，只顯示有訂購的商品
                 html += `<h4>訂購明細：</h4><ul>`;
                 
-                // 根據您的 CSV 檔案，商品名稱從第 12 欄開始
-                const products = [
-                    '特選柚 10斤裝', '特選柚 5斤裝', '大器柚 10斤裝',
-                    '雞蛋柚 10斤裝', '雞蛋柚 5斤裝', '紅文旦 10斤裝'
-                ];
-                
-                products.forEach(productName => {
-                    const quantity = order[productName] || 0;
-                    if (quantity > 0) {
-                        html += `<li>${productName}：<strong>${quantity}</strong> 箱</li>`;
+                // 檢查訂單物件的所有鍵，找到商品欄位
+                for (const key in order) {
+                    // 根據 Google Sheet 欄位名稱來判斷是否為商品
+                    if (key.includes('斤裝')) {
+                        const quantity = order[key] || 0;
+                        if (quantity > 0) {
+                            // 將完整的商品名稱截短，讓顯示更美觀
+                            const shortName = key.split('（')[0].trim();
+                            html += `<li>${shortName}：<strong>${quantity}</strong> 箱</li>`;
+                        }
                     }
-                });
-
+                }
+                
                 html += `</ul></div>`;
             });
             
