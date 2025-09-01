@@ -1,6 +1,27 @@
-/* 這裡放你的 CSS 樣式，讓網頁看起來更美觀 */
-body { font-family: Arial, sans-serif; background-color: #f4f4f4; }
-.container { max-width: 800px; margin: 50px auto; padding: 20px; background-color: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-input[type="text"] { width: calc(100% - 100px); padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
-button { padding: 10px 20px; background-color: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; }
-#resultSection { margin-top: 20px; }
+/* style.css (新增) */
+
+.order-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.order-card h3 {
+    border-bottom: 2px solid #4CAF50;
+    padding-bottom: 5px;
+    margin-top: 0;
+    color: #333;
+}
+
+.order-card p, .order-card li {
+    line-height: 1.6;
+    margin: 5px 0;
+}
+
+.order-card ul {
+    list-style-type: none;
+    padding-left: 0;
+}
