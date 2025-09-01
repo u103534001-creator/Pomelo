@@ -7,34 +7,35 @@ document.getElementById('queryBtn').addEventListener('click', async () => {
         return;
     }
 
-    // 替換成您發布的 Google Apps Script 或 CSV URL
-    const API_URL = 'https://script.google.com/macros/s/AKfycbz3glvJouGAVnmAaeMFkiYHIcls5fryU6S1GWthjT7AQTA4Nbz0-SL9b5elTusg7u1VzQ/exec';
+    // 替換成您發布的 Google Apps Script URL
+    const API_URL = 'https://script.google.com/macros/s/AKfycbw5aHDDpMyLS-lTnG2OJnatDfoMWuKt1qgG4rjUS-iA4mquB5ou73ovTTI58jQI18pp1w/exec';
 
     resultSection.innerHTML = '<p>正在查詢中，請稍候...</p>';
 
     try {
-        // 如果您使用 Apps Script，這裡的 URL 應該包含查詢參數
-        // 例如: const response = await fetch(`${API_URL}?name=${encodeURIComponent(name)}`);
-        
-        // 如果您使用 CSV，則需要先下載所有資料
-        const response = await fetch(API_URL);
-        const csvData = await response.text();
-        const rows = csvData.split('\n').map(row => row.split(','));
+        const response = await fetch(`${API_URL}?name=${encodeURIComponent(name)}`);
+        const orders = await response.json();
 
-        // 找到訂單人姓名符合的資料
-        const orders = rows.filter(row => row[1] === name); // 假設姓名在第二欄
-
-        if (orders.length > 0) {
-            let html = `<h2>${name} 的訂單資訊</h2><table><thead><tr><th>時間戳記</th><th>訂購人姓名</th><th>...其他欄位...</th></tr></thead><tbody>`;
+        if (orders && orders.length > 0) {
+            let html = `<h2>${name} 的訂單資訊</h2><table><thead><tr>`;
+            // 動態生成表格標題
+            for (const key in orders[0]) {
+                html += `<th>${key}</th>`;
+            }
+            html += `</tr></thead><tbody>`;
+            // 動態生成表格內容
             orders.forEach(order => {
-                html += `<tr><td>${order[0]}</td><td>${order[1]}</td><td>...</td></tr>`;
+                html += `<tr>`;
+                for (const key in order) {
+                    html += `<td>${order[key]}</td>`;
+                }
+                html += `</tr>`;
             });
             html += '</tbody></table>';
             resultSection.innerHTML = html;
         } else {
             resultSection.innerHTML = `<p>查無「${name}」的訂單。</p>`;
         }
-
     } catch (error) {
         resultSection.innerHTML = '<p style="color: red;">查詢失敗，請稍後再試。</p>';
         console.error('Error fetching data:', error);
